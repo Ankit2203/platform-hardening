@@ -29,12 +29,12 @@ jobs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop02'
         publishLocation: 'Container'
+  displayName: 'Run Python Script for Watcher'
   condition: contains(variables['Build.SourcePath'], variables['watcherTrigger'])
 
 - job: RunPythonScriptRules
   pool: 
     vmImage: 'ubuntu-latest'
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
   steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -54,4 +54,5 @@ jobs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'another_drop02'
         publishLocation: 'Container'
+  displayName: 'Run Python Script for Rules'
   condition: contains(variables['Build.SourcePath'], variables['ruleTrigger'])
