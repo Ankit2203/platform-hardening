@@ -1,13 +1,13 @@
 variables:
   watcherTrigger: 
-    branches: 
-      exclude: ['*']
+    
+    exclude: ['*']
     paths: 
       include: ['INPUT/watcher_automation_input.xlsm']
 
   ruleTrigger:  
-    branches: 
-      exclude: ['*']
+    
+    exclude: ['*']
     paths:
       include: ['INPUT/rules_automation_input.xlsm']
 
