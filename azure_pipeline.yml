@@ -1,20 +1,15 @@
 variables:
-  watcherTrigger: 
-    
-    exclude: ['*']
-    paths: 
-      include: ['INPUT/watcher_automation_input.xlsm']
+  - name: watcherTrigger
+    value: 'INPUT/watcher_automation_input.xlsm'
 
-  ruleTrigger:  
-    
-    exclude: ['*']
-    paths:
-      include: ['INPUT/rules_automation_input.xlsm']
+  - name: ruleTrigger
+    value: 'INPUT/rules_automation_input.xlsm'
 
 jobs:
 - job: RunPythonScriptWatcher
   pool:
     vmImage: 'ubuntu-latest'
+  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
   steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -34,10 +29,12 @@ jobs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop02'
         publishLocation: 'Container'
+  condition: contains(variables['Build.SourcePath'], variables['watcherTrigger'])
 
 - job: RunPythonScriptRules
   pool: 
     vmImage: 'ubuntu-latest'
+  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
   steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -57,4 +54,4 @@ jobs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'another_drop02'
         publishLocation: 'Container'
-
+  condition: contains(variables['Build.SourcePath'], variables['ruleTrigger'])
