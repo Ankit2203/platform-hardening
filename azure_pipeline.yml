@@ -1,19 +1,15 @@
 variables:
-  watcherTrigger:
-    branches:
-      exclude:
-        - '*'
-    paths:
-      include:
-        - 'INPUT/watcher_automation_input.xlsm'
+  watcherTrigger: 
+    branches: 
+      exclude: ['*']
+    paths: 
+      include: ['INPUT/watcher_automation_input.xlsm']
 
-  ruleTrigger:
-    branches:
-      exclude:
-        - '*'
+  ruleTrigger:  
+    branches: 
+      exclude: ['*']
     paths:
-      include:
-        - 'INPUT/rules_automation_input.xlsm'
+      include: ['INPUT/rules_automation_input.xlsm']
 
 jobs:
 - job: RunPythonScriptWatcher
@@ -61,3 +57,4 @@ jobs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'another_drop02'
         publishLocation: 'Container'
+
