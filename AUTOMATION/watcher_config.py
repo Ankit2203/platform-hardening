@@ -98,4 +98,4 @@ RESPONSE_SHEET = 'RESPONSE/'
 
 MASTER_SHEET = 'MASTER/elastic_watcher_master.xlsx'
 
-INPUT_FILE_MASTER_COPY = 'INPUT_COPY/watcher_automation_input copy.xlsm'
+INPUT_FILE_MASTER_COPY = 'INPUT_COPY/watcher_automation_input.xlsm'

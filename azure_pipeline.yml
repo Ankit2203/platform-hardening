@@ -5,7 +5,7 @@ variables:
           - '*'
       paths:
         include:
-          - 'INPUT/watcher_automation_input copy.xlsm'
+          - 'INPUT/watcher_automation_input.xlsm'
 
   ruleTrigger:
     - branches:
