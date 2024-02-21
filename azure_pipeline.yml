@@ -9,8 +9,8 @@ jobs:
 - job: RunPythonScriptWatcher
   pool:
     vmImage: 'ubuntu-latest'
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
   displayName: 'Run Python Script for Watcher'
+  condition: contains(variables['Build.SourcePath'], variables['watcherTrigger'])
   steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -24,18 +24,17 @@ jobs:
     - task: CopyFiles@2
       inputs:
         targetFolder: '$(Build.ArtifactStagingDirectory)'
-
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop02'
         publishLocation: 'Container'
-  condition: contains(variables['Build.SourcePath'], variables['watcherTrigger'])
 
 - job: RunPythonScriptRules
   pool: 
     vmImage: 'ubuntu-latest'
   displayName: 'Run Python Script for Rules'
+  condition: contains(variables['Build.SourcePath'], variables['ruleTrigger'])
   steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -49,10 +48,8 @@ jobs:
     - task: CopyFiles@2
       inputs:
         targetFolder: '$(Build.ArtifactStagingDirectory)'
-
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'another_drop02'
         publishLocation: 'Container'
-  condition: contains(variables['Build.SourcePath'], variables['ruleTrigger'])
