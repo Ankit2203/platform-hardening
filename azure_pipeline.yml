@@ -1,1 +1,60 @@
+variables:
+  watcherTrigger:
+    - branches:
+        exclude:
+          - '*'
+      paths:
+        include:
+          - 'PROG/INPUT/ELASTIC_ALERT_RULES.xlsm'
+
+jobs:
+- job: RunPythonScriptWatcher
+  pool:
+    vmImage: 'ubuntu-latest'
+  trigger: ${{ variables.watcherTrigger }}
+  steps:
+  - checkout: self
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+      architecture: 'x64'
+  - script: |
+      pip install -r requirements.txt
+      python watcher_automation.py
+
+  - task: CopyFiles@2
+    inputs:
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop02'
+      publishLocation: 'Container'
+
+- job: RunPythonScriptAnotherWatcher
+  pool:
+    vmImage: 'ubuntu-latest'
+  trigger: ${{ variables.watcherTrigger }}
+  steps:
+  - checkout: self
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+      architecture: 'x64'
+  - script: |
+      pip install -r requirements.txt
+      python another_watcher_automation.py
+
+  - task: CopyFiles@2
+    inputs:
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'another_drop02'
+      publishLocation: 'Container'
 
