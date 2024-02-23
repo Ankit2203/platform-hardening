@@ -1,57 +1,53 @@
-variables:
-  - name: watcherTrigger
-    value: 'INPUT/watcher_automation_input.xlsm'
-
-  - name: ruleTrigger
-    value: 'INPUT/rules_automation_input.xlsm'
+trigger:
+  branches:
+    exclude:
+    - '*'
+  paths:
+    include:
+    - 'INPUT/rules_automation_input.xlsm'
+    - 'INPUT/watcher_automation_inputs.xlsm'
 
 jobs:
-- job: RunPythonScriptWatcher
+- job: RunPythonScript_Rule
   pool:
     vmImage: 'ubuntu-latest'
-  displayName: 'Run Python Script for Watcher'
-  condition: contains(variables['Build.SourceTfvcRunAllTests'], variables['watcherTrigger'])
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'INPUT/rules_automation_input.xlsm'))
   steps:
-    - checkout: self
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-        architecture: 'x64'
-    - script: |
-        echo "Build.SourcePath: $(Build.SourceTfvcRunAllTests)"
-        pip install -r requirements.txt
-        python AUTOMATION/watcher_automation.py
-    - task: CopyFiles@2
-      inputs:
-        targetFolder: '$(Build.ArtifactStagingDirectory)'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop02'
-        publishLocation: 'Container'
+  - checkout: self
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+  - script: |
+      pip install -r requirements.txt
+      python AUTOMATION/rule_generator.py.py
+  - task: CopyFiles@2
+    inputs:
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop02 files'
+      publishLocation: 'Container'
 
-- job: RunPythonScriptRules
-  pool: 
+- job: RunPythonScript_Watcher
+  pool:
     vmImage: 'ubuntu-latest'
-  displayName: 'Run Python Script for Rules'
-  condition: contains(variables['Build.SourceTfvcRunAllTests'], variables['ruleTrigger'])
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'INPUT/watcher_automation_inputs.xlsm'))
   steps:
-    - checkout: self
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-        architecture: 'x64'
-    - script: |
-        echo "Build.SourcePath: $(Build.SourceTfvcRunAllTests)"
-        pip install -r requirements.txt
-        python AUTOMATION/rule_generator.py
-    - task: CopyFiles@2
-      inputs:
-        targetFolder: '$(Build.ArtifactStagingDirectory)'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'another_drop02'
-        publishLocation: 'Container'
+  - checkout: self
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+  - script: |
+      pip install -r requirements.txt
+      python AUTOMATION/watcher_automation.py
+  - task: CopyFiles@2
+    inputs:
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop file'
+      publishLocation: 'Container'
