@@ -1,3 +1,4 @@
+
 trigger:
   branches:
     exclude:
@@ -14,6 +15,8 @@ jobs:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'INPUT/rules_automation_input.xlsm'))
   steps:
   - checkout: self
+  - script: echo "Current Branch: $(Build.SourceBranch)"
+  - script: echo "Does it contain 'INPUT/rules_automation_input.xlsm'? $(contains(variables['Build.SourceBranch'], 'INPUT/rules_automation_input.xlsm'))"
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.x'
@@ -36,6 +39,8 @@ jobs:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'INPUT/watcher_automation_inputs.xlsm'))
   steps:
   - checkout: self
+  - script: echo "Current Branch: $(Build.SourceBranch)"
+  - script: echo "Does it contain 'INPUT/watcher_automation_inputs.xlsm'? $(contains(variables['Build.SourceBranch'], 'INPUT/watcher_automation_inputs.xlsm'))"
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.x'
