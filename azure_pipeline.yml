@@ -1,58 +1,58 @@
-
-trigger:
-  branches:
-    exclude:
-    - '*'
-  paths:
-    include:
-    - 'INPUT/rules_automation_input.xlsm'
-    - 'INPUT/watcher_automation_inputs.xlsm'
-
-jobs:
-- job: RunPythonScript_Rule
-  pool:
-    vmImage: 'ubuntu-latest'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'INPUT/rules_automation_input.xlsm'))
-  steps:
-  - checkout: self
-  - script: echo "Current Branch: $(Build.SourceBranch)"
-  - script: echo "Does it contain 'INPUT/rules_automation_input.xlsm'? $(contains(variables['Build.SourceBranch'], 'INPUT/rules_automation_input.xlsm'))"
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.x'
-      addToPath: true
-  - script: |
-      pip install -r requirements.txt
-      python AUTOMATION/rule_generator.py.py
-  - task: CopyFiles@2
-    inputs:
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'drop02 files'
-      publishLocation: 'Container'
-
-- job: RunPythonScript_Watcher
-  pool:
-    vmImage: 'ubuntu-latest'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'INPUT/watcher_automation_inputs.xlsm'))
-  steps:
-  - checkout: self
-  - script: echo "Current Branch: $(Build.SourceBranch)"
-  - script: echo "Does it contain 'INPUT/watcher_automation_inputs.xlsm'? $(contains(variables['Build.SourceBranch'], 'INPUT/watcher_automation_inputs.xlsm'))"
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.x'
-      addToPath: true
-  - script: |
-      pip install -r requirements.txt
-      python AUTOMATION/watcher_automation.py
-  - task: CopyFiles@2
-    inputs:
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'drop file'
-      publishLocation: 'Container'
+#
+#trigger:
+#  branches:
+#    exclude:
+#    - '*'
+#  paths:
+#    include:
+#    - 'INPUT/rules_automation_input.xlsm'
+#    - 'INPUT/watcher_automation_inputs.xlsm'
+#
+#jobs:
+#- job: RunPythonScript_Rule
+#  pool:
+#    vmImage: 'ubuntu-latest'
+#  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'INPUT/rules_automation_input.xlsm'))
+#  steps:
+#  - checkout: self
+#  - script: echo "Current Branch: $(Build.SourceBranch)"
+#  - script: echo "Does it contain 'INPUT/rules_automation_input.xlsm'? $(contains(variables['Build.SourceBranch'], 'INPUT/rules_automation_input.xlsm'))"
+#  - task: UsePythonVersion@0
+#    inputs:
+#      versionSpec: '3.x'
+#      addToPath: true
+#  - script: |
+#      pip install -r requirements.txt
+#      python AUTOMATION/rule_generator.py.py
+#  - task: CopyFiles@2
+#    inputs:
+#      targetFolder: '$(Build.ArtifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1
+#    inputs:
+#      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#      ArtifactName: 'drop02 files'
+#      publishLocation: 'Container'
+#
+#- job: RunPythonScript_Watcher
+#  pool:
+#    vmImage: 'ubuntu-latest'
+#  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), contains(variables['Build.SourceBranch'], 'INPUT/watcher_automation_inputs.xlsm'))
+#  steps:
+#  - checkout: self
+#  - script: echo "Current Branch: $(Build.SourceBranch)"
+#  - script: echo "Does it contain 'INPUT/watcher_automation_inputs.xlsm'? $(contains(variables['Build.SourceBranch'], 'INPUT/watcher_automation_inputs.xlsm'))"
+#  - task: UsePythonVersion@0
+#    inputs:
+#      versionSpec: '3.x'
+#      addToPath: true
+#  - script: |
+#      pip install -r requirements.txt
+#      python AUTOMATION/watcher_automation.py
+#  - task: CopyFiles@2
+#    inputs:
+#      targetFolder: '$(Build.ArtifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1
+#    inputs:
+#      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#      ArtifactName: 'drop file'
+#      publishLocation: 'Container'
